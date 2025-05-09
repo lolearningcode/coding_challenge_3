@@ -1,0 +1,22 @@
+---
+- name: Configure EC2 with NGINX and Hello World page
+  hosts: web
+  become: yes
+
+  tasks:
+    - name: Enable NGINX in Amazon Linux Extras and install
+      shell: |
+        amazon-linux-extras enable nginx1
+        yum clean metadata
+        yum install -y nginx
+
+    - name: Start and enable NGINX service
+      service:
+        name: nginx
+        state: started
+        enabled: true
+
+    - name: Replace default HTML with Hello World
+      copy:
+        content: "<h1>Hello, World!</h1>"
+        dest: /usr/share/nginx/html/index.html
